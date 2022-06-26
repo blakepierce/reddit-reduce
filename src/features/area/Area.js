@@ -4,7 +4,7 @@ import { Post } from '../post/Post';
 import { PostLoading } from '../post/PostLoading';
 import { PostError } from '../post/PostError';
 import { PostInitial } from '../post/PostInitial';
-import { selectAreaName, selectPosts, selectCurrentArea, selectFirstState, selectIsLoading, selectError, fetchPosts } from './areaSlice';
+import { selectAreaName, selectPosts, selectCurrentArea, selectFirstState, selectIsLoading, selectError, setSearchTerm, fetchPosts } from './areaSlice';
 
 export function Area() {
   const areaName = useSelector(selectAreaName);

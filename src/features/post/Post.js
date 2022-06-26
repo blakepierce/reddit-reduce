@@ -15,7 +15,6 @@ export function Post({ post }) {
   const videoURL = post.media;
   const media = post.is_reddit_media_domain
   const imgSRC = post.url;
-  const adult = post.over_18;
   const dispatch = useDispatch();
   
   function backToTop () {
@@ -36,7 +35,6 @@ export function Post({ post }) {
 
   return (
     <div>
-      {adult ? <></> : 
         <div className="m-4 p-6 md:max-w-xl md:mx-auto lg:max-w-3xl bg-slate-200 dark:bg-slate-600 rounded-xl shadow-md">
             <div className="flex justify-between">
                 <h5 onClick={handleTitleClick} className="flex-initial mb-2 text-2xl font-bold tracking-tight cursor-pointer text-slate-800 dark:text-slate-50">{title}</h5>
@@ -49,7 +47,6 @@ export function Post({ post }) {
             {video ? <video className="mb-3 rounded-xl" controls autoPlay><source src={videoURL.reddit_video.fallback_url} type='video/mp4'/></video> : <></>}
             {media && !video ? <img src={imgSRC} className="mb-3 rounded-xl"></img> : <></> }
         </div>
-      }
     </div>
   );
 }

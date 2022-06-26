@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getPosts } from './areaAPI';
+import { getPosts, getResults } from './areaAPI';
 
 // Defines Initial State
 const initialState = {
@@ -77,6 +77,24 @@ export const fetchPosts = (path) => async (dispatch) => {
     dispatch(getPostsSuccess(posts));
   } catch (error) {
     // Sets error to true
+    console.log(error);
+    dispatch(getPostsFailed());
+  }
+};
+
+export const fetchResults = (searchTerm) => async (dispatch) => {
+  try {
+    // Sets isLoading to true
+    dispatch(startGetPosts());
+
+    // Utilizes API to get json data from Reddit
+    const posts = await getResults(searchTerm);
+    
+    // Dispatches action with posts to the Store
+    dispatch(getPostsSuccess(posts));
+  } catch (error) {
+    // Sets error to true
+    console.log(error);
     dispatch(getPostsFailed());
   }
 };
