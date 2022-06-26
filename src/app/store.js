@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import areaReducer from '../features/area/areaSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    area: areaReducer
   },
 });
