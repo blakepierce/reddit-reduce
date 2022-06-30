@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getPosts, getResults } from './areaAPI';
+import { createSlice } from '@reduxjs/toolkit';
+import { getPosts, getResults, getComments } from './areaAPI';
 
 // Defines Initial State
 const initialState = {
@@ -40,6 +40,32 @@ export const areaSlice = createSlice({
     getPostsFailed: (state) => {
       state.isLoading = false;
       state.error = true;
+    },
+    toggleShowingComments: (state, action) => {
+      state.posts[action.payload].showingComments = !state.posts[action.payload]
+        .showingComments;
+    },
+    // Dispatched by clicking title of post - payload is the post's index
+    startGetComments: (state, action) => {
+      // Toggle showingComments status
+      state.posts[action.payload].showingComments = !state.posts[action.payload]
+        .showingComments;
+
+      // If not showingComments, return
+      if (!state.posts[action.payload].showingComments) {
+        return;
+      }
+      // Else, set status to loading, no error
+      state.posts[action.payload].loadingComments = true;
+      state.posts[action.payload].error = false;
+    },
+    getCommentsSuccess: (state, action) => {
+      state.posts[action.payload.index].loadingComments = false;
+      state.posts[action.payload.index].comments = action.payload.comments;
+    },
+    getCommentsFailed: (state, action) => {
+      state.posts[action.payload].loadingComments = false;
+      state.posts[action.payload].error = true;
     }
   },
 });
@@ -52,7 +78,11 @@ export const {
   setAreaName,
   startGetPosts,
   getPostsSuccess,
-  getPostsFailed 
+  getPostsFailed,
+  toggleShowingComments,
+  startGetComments,
+  getCommentsSuccess,
+  getCommentsFailed 
 } = areaSlice.actions;
 
 // Export selectors
@@ -72,9 +102,18 @@ export const fetchPosts = (path) => async (dispatch) => {
 
     // Utilizes API to get json data from Reddit
     const posts = await getPosts(path);
+
+    // Add fields to each post for comments later on
+    const postsWithComments = posts.map((post) => ({
+      ...post,
+      showingComments: false,
+      loadingComments: false,
+      errorComments: false,
+      comments: []
+    }))
     
     // Dispatches action with posts to the Store
-    dispatch(getPostsSuccess(posts));
+    dispatch(getPostsSuccess(postsWithComments));
   } catch (error) {
     // Sets error to true
     console.log(error);
@@ -98,6 +137,24 @@ export const fetchResults = (searchTerm) => async (dispatch) => {
     dispatch(getPostsFailed());
   }
 };
+
+export const fetchComments = (index, permalink) => async (dispatch) => {
+  try {
+    // Sets loadingComments to true
+    dispatch(startGetComments(index));
+
+    // Utilizes API to get json data from Reddit
+    const comments = await getComments(permalink);
+
+    // Dispatches action with comments to the Store, sets loadingComments to false
+    dispatch(getCommentsSuccess({ index, comments }));
+  } catch (error) {
+
+    // Sets errorComments to true, loadingComments to false
+    dispatch(getCommentsFailed(index));
+  }
+ };
+ 
 
 // Export reducers
 export default areaSlice.reducer;

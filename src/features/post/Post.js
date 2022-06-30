@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
-import { setCurrentArea, setAreaName } from '../area/areaSlice';
-import image from '../../placeholder-image.png'
+import { setCurrentArea, setAreaName, fetchComments, selectPosts, toggleShowingComments } from '../area/areaSlice';
+import { Comment } from '../comment/Comment';
+import { CommentLoading } from '../comment/CommentLoading';
+import { CommentError } from '../comment/CommentError';
 import { HiOutlineArrowSmRight } from "react-icons/hi"
 
 export function Post({ post }) {
@@ -15,16 +17,51 @@ export function Post({ post }) {
   const videoURL = post.media;
   const media = post.is_reddit_media_domain
   const imgSRC = post.url;
+  const posts = useSelector(selectPosts);
+  const index = posts.indexOf(post);
   const dispatch = useDispatch();
   
   function backToTop () {
     window.scrollTo( { top: 0, behavior: 'smooth' } );
   }
 
+  const renderComments = () => {
+    if (post.errorComments) {
+      return (
+        <div>
+          <CommentError />
+        </div>
+      );
+    }
+  
+    if (post.loadingComments) {
+      return (
+        <div>
+          <CommentLoading />
+        </div>
+      );
+    }
+  
+    if (post.showingComments) {
+      return (
+        <div>
+          {post.comments.map((comment) => (
+            <Comment comment={comment} key={comment.id} />
+          ))}
+        </div>
+      );
+    }
+  
+    return null;
+  };
+ 
+
   const handleTitleClick = () => {
-    dispatch(setCurrentArea(postURL));
-    dispatch(setAreaName(`Post's Comments`));
-    backToTop();
+    if (post.showingComments) {
+      dispatch(toggleShowingComments(index));
+    } else {
+      dispatch(fetchComments(index, postURL));
+    }
   };
 
   const handleArrowClick = () => {
@@ -45,8 +82,10 @@ export function Post({ post }) {
             </div>
             {/* if there is a video, play the video */}
             {video ? <video className="mb-3 rounded-xl" controls autoPlay><source src={videoURL.reddit_video.fallback_url} type='video/mp4'/></video> : <></>}
-            {media && !video ? <img src={imgSRC} className="mb-3 rounded-xl"></img> : <></> }
+            {media && !video ? <img src={imgSRC} className="mb-3 rounded-xl" alt="From Reddit post"></img> : <></> }
         </div>
+
+        {renderComments()}
     </div>
   );
 }

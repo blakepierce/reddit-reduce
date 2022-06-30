@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Post } from '../post/Post';
 import { PostLoading } from '../post/PostLoading';
 import { PostError } from '../post/PostError';
 import { PostInitial } from '../post/PostInitial';
-import { selectAreaName, selectPosts, selectCurrentArea, selectFirstState, selectIsLoading, selectError, setSearchTerm, fetchPosts } from './areaSlice';
+import { selectAreaName, selectPosts, selectCurrentArea, selectFirstState, selectIsLoading, selectError, fetchPosts } from './areaSlice';
 
 export function Area() {
   const areaName = useSelector(selectAreaName);
@@ -18,7 +18,7 @@ export function Area() {
   // dispatches fecthPosts whenever currentArea changes
   useEffect(() => {
     dispatch(fetchPosts(currentArea));
-  }, [currentArea]);
+  }, [currentArea, dispatch]);
 
   if (firstState) {
     return (
@@ -55,7 +55,6 @@ export function Area() {
         {posts.map((post) => (
           <Post key={post.id} post={post} />
         ))}
-        {/* <Postv1 /> */}
     </div>
   );
 }
