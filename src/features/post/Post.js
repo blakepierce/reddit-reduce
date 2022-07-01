@@ -81,7 +81,7 @@ export function Post({ post }) {
               <ReactMarkdown children={body} />
             </div>
             {/* if there is a video, play the video */}
-            {video ? <video className="mb-3 max-h-40 rounded-xl" controls autoPlay preload="auto" loop ><source src={videoURL.reddit_video.fallback_url} type='video/mp4'/></video> : <></>}
+            {video ? <video className="mb-3 max-h-96 rounded-xl" controls autoPlay preload="auto" webkit-playsinline playsinline loop ><source src={videoURL.reddit_video.fallback_url} type='video/mp4'/></video> : <></>}
             {media && !video ? <img src={imgSRC} className="mb-3 max-h-96 rounded-xl" alt="From Reddit post"></img> : <></> }
         </div>
 
