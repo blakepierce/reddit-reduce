@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { setCurrentArea, setAreaName, setFirstState } from '../area/areaSlice';
 import { HiOutlineArrowSmRight } from "react-icons/hi";
 

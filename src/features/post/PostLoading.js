@@ -1,7 +1,4 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import image from '../../placeholder-image.png'
-import { HiOutlineArrowSmRight } from "react-icons/hi"
+import React from 'react';
 
 export function PostLoading() {
   

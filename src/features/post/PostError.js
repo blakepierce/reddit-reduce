@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentArea, setCurrentArea, setAreaName, setFirstState, fetchPosts } from '../area/areaSlice';
 
